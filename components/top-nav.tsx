@@ -88,24 +88,6 @@ export function TopNav() {
         </SheetContent>
       </Sheet>
       <div className="flex w-full items-center gap-2 md:ml-auto md:gap-4 lg:gap-2 xl:gap-4">
-        {isSearchOpen ? (
-          <div className="flex w-full items-center gap-2">
-            <Input placeholder="Search products, orders, etc..." className="w-full" autoFocus />
-            <Button variant="ghost" size="icon" onClick={() => setIsSearchOpen(false)}>
-              <X className="h-5 w-5" />
-              <span className="sr-only">Close search</span>
-            </Button>
-          </div>
-        ) : (
-          <Button variant="outline" size="icon" className="shrink-0" onClick={() => setIsSearchOpen(true)}>
-            <Search className="h-5 w-5" />
-            <span className="sr-only">Search</span>
-          </Button>
-        )}
-        <Button variant="outline" size="icon" className="shrink-0">
-          <Bell className="h-5 w-5" />
-          <span className="sr-only">Notifications</span>
-        </Button>
         <ModeToggle />
       </div>
     </header>

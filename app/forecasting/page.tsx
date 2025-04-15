@@ -18,18 +18,6 @@ export default function ForecastingPage() {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Demand Forecasting</h1>
         <div className="flex items-center gap-2">
-          <Button variant="outline">
-            <Calendar className="w-4 h-4 mr-2" />
-            Date Range
-          </Button>
-          <Button variant="outline">
-            <Settings className="w-4 h-4 mr-2" />
-            Settings
-          </Button>
-          <Button>
-            <RefreshCw className="w-4 h-4 mr-2" />
-            Update Forecast
-          </Button>
         </div>
       </div>
 

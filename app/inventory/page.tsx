@@ -17,14 +17,6 @@ export default function InventoryPage() {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Inventory Management</h1>
         <div className="flex items-center gap-2">
-          <Button variant="outline">
-            <Download className="w-4 h-4 mr-2" />
-            Export
-          </Button>
-          <Button>
-            <Plus className="w-4 h-4 mr-2" />
-            Add Product
-          </Button>
         </div>
       </div>
 
@@ -34,16 +26,6 @@ export default function InventoryPage() {
           <Button type="submit" size="icon" variant="ghost">
             <Search className="h-4 w-4" />
             <span className="sr-only">Search</span>
-          </Button>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm">
-            <Filter className="w-4 h-4 mr-2" />
-            Filter
-          </Button>
-          <Button variant="outline" size="sm">
-            <ArrowUpDown className="w-4 h-4 mr-2" />
-            Sort
           </Button>
         </div>
       </div>
