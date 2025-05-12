@@ -34,51 +34,7 @@ export function SideNav() {
                 Inventory
               </Button>
             </Link>
-            {/* <Link href="/products">
-              <Button
-                variant={pathname?.startsWith("/products") ? "secondary" : "ghost"}
-                className="w-full justify-start gap-2"
-              >
-                <Package className="h-4 w-4" />
-                Products
-              </Button>
-            </Link>
-            <Link href="/orders">
-              <Button
-                variant={pathname?.startsWith("/orders") ? "secondary" : "ghost"}
-                className="w-full justify-start gap-2"
-              >
-                <ShoppingCart className="h-4 w-4" />
-                Orders
-              </Button>
-            </Link>
-            <Link href="/suppliers">
-              <Button
-                variant={pathname?.startsWith("/suppliers") ? "secondary" : "ghost"}
-                className="w-full justify-start gap-2"
-              >
-                <Truck className="h-4 w-4" />
-                Suppliers
-              </Button>
-            </Link>
-            <Link href="/customers">
-              <Button
-                variant={pathname?.startsWith("/customers") ? "secondary" : "ghost"}
-                className="w-full justify-start gap-2"
-              >
-                <Users className="h-4 w-4" />
-                Customers
-              </Button>
-            </Link>
-            <Link href="/analytics">
-              <Button
-                variant={pathname?.startsWith("/analytics") ? "secondary" : "ghost"}
-                className="w-full justify-start gap-2"
-              >
-                <BarChart3 className="h-4 w-4" />
-                Analytics
-              </Button>
-            </Link> */}
+        
             <Link href="/forecasting">
               <Button
                 variant={pathname?.startsWith("/forecasting") ? "secondary" : "ghost"}
@@ -88,15 +44,6 @@ export function SideNav() {
                 Forecasting
               </Button>
             </Link>
-            {/* <Link href="/settings">
-              <Button
-                variant={pathname?.startsWith("/settings") ? "secondary" : "ghost"}
-                className="w-full justify-start gap-2"
-              >
-                <Settings className="h-4 w-4" />
-                Settings
-              </Button>
-            </Link> */}
           </nav>
         </div>
       </div>

@@ -1,22 +1,179 @@
+'use client'
+
+import { useState, useEffect } from "react"
 import type { Metadata } from "next"
-import { ArrowUpDown, Download, Filter, Plus, Search } from "lucide-react"
+import { ArrowUpDown, Download, Filter, Plus, Search, Trash2 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Label } from "@/components/ui/label"
 
-export const metadata: Metadata = {
-  title: "Inventory Management",
-  description: "Manage your inventory levels and product stock",
+interface Product {
+  id: string
+  sku: string
+  name: string
+  category: string
+  inStock: number
+  reorderPoint: number
+  unitPrice: number
 }
 
+// export const metadata: Metadata = {
+//   title: "Inventory Management",
+//   description: "Manage your inventory levels and product stock",
+// }
+
 export default function InventoryPage() {
+  const [products, setProducts] = useState<Product[]>([])
+  const [newProduct, setNewProduct] = useState({
+    sku: '',
+    name: '',
+    category: '',
+    inStock: 0,
+    reorderPoint: 0,
+    unitPrice: 0,
+  })
+
+  useEffect(() => {
+    fetchProducts()
+  }, [])
+
+  const fetchProducts = async () => {
+    try {
+      const response = await fetch('/api/products')
+      const data = await response.json()
+      setProducts(data)
+    } catch (error) {
+      console.error('Error fetching products:', error)
+    }
+  }
+
+  const handleAddProduct = async () => {
+    try {
+      const response = await fetch('/api/products', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newProduct),
+      })
+      if (response.ok) {
+        fetchProducts()
+        setNewProduct({
+          sku: '',
+          name: '',
+          category: '',
+          inStock: 0,
+          reorderPoint: 0,
+          unitPrice: 0,
+        })
+      }
+    } catch (error) {
+      console.error('Error adding product:', error)
+    }
+  }
+
+  const handleDeleteProduct = async (id: string) => {
+    try {
+      const response = await fetch(`/api/products?id=${id}`, {
+        method: 'DELETE',
+      })
+      if (response.ok) {
+        fetchProducts()
+      }
+    } catch (error) {
+      console.error('Error deleting product:', error)
+    }
+  }
+
   return (
     <div className="flex flex-col p-6 space-y-4">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Inventory Management</h1>
         <div className="flex items-center gap-2">
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button>
+                <Plus className="h-4 w-4 mr-2" />
+                Add Product
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Add New Product</DialogTitle>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="sku" className="text-right">SKU</Label>
+                  <Input
+                    id="sku"
+                    value={newProduct.sku}
+                    onChange={(e) => setNewProduct({ ...newProduct, sku: e.target.value })}
+                    className="col-span-3"
+                  />
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="name" className="text-right">Name</Label>
+                  <Input
+                    id="name"
+                    value={newProduct.name}
+                    onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
+                    className="col-span-3"
+                  />
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="category" className="text-right">Category</Label>
+                  <Input
+                    id="category"
+                    value={newProduct.category}
+                    onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
+                    className="col-span-3"
+                  />
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="inStock" className="text-right">In Stock</Label>
+                  <Input
+                    id="inStock"
+                    type="number"
+                    value={newProduct.inStock}
+                    onChange={(e) => setNewProduct({ ...newProduct, inStock: parseInt(e.target.value) })}
+                    className="col-span-3"
+                  />
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="reorderPoint" className="text-right">Reorder Point</Label>
+                  <Input
+                    id="reorderPoint"
+                    type="number"
+                    value={newProduct.reorderPoint}
+                    onChange={(e) => setNewProduct({ ...newProduct, reorderPoint: parseInt(e.target.value) })}
+                    className="col-span-3"
+                  />
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="unitPrice" className="text-right">Unit Price</Label>
+                  <Input
+                    id="unitPrice"
+                    type="number"
+                    step="0.01"
+                    value={newProduct.unitPrice}
+                    onChange={(e) => setNewProduct({ ...newProduct, unitPrice: parseFloat(e.target.value) })}
+                    className="col-span-3"
+                  />
+                </div>
+                <Button onClick={handleAddProduct} className="mt-4">Add Product</Button>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
 
@@ -41,92 +198,34 @@ export default function InventoryPage() {
               <TableHead className="text-center">Reorder Point</TableHead>
               <TableHead className="text-center">Status</TableHead>
               <TableHead className="text-right">Unit Price</TableHead>
+              <TableHead className="text-center">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            <TableRow>
-              <TableCell className="font-medium">WH001</TableCell>
-              <TableCell>Wireless Headphones</TableCell>
-              <TableCell>Electronics</TableCell>
-              <TableCell className="text-center">5</TableCell>
-              <TableCell className="text-center">10</TableCell>
-              <TableCell className="text-center">
-                <Badge variant="destructive">Low Stock</Badge>
-              </TableCell>
-              <TableCell className="text-right">$129.99</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell className="font-medium">OJ002</TableCell>
-              <TableCell>Organic Juice</TableCell>
-              <TableCell>Groceries</TableCell>
-              <TableCell className="text-center">25</TableCell>
-              <TableCell className="text-center">15</TableCell>
-              <TableCell className="text-center">
-                <Badge variant="success" className="bg-green-500 hover:bg-green-600">
-                  In Stock
-                </Badge>
-              </TableCell>
-              <TableCell className="text-right">$4.99</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell className="font-medium">LS003</TableCell>
-              <TableCell>Leather Shoes</TableCell>
-              <TableCell>Footwear</TableCell>
-              <TableCell className="text-center">12</TableCell>
-              <TableCell className="text-center">8</TableCell>
-              <TableCell className="text-center">
-                <Badge variant="success" className="bg-green-500 hover:bg-green-600">
-                  In Stock
-                </Badge>
-              </TableCell>
-              <TableCell className="text-right">$89.99</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell className="font-medium">KB004</TableCell>
-              <TableCell>Kitchen Blender</TableCell>
-              <TableCell>Home Appliances</TableCell>
-              <TableCell className="text-center">8</TableCell>
-              <TableCell className="text-center">5</TableCell>
-              <TableCell className="text-center">
-                <Badge variant="success" className="bg-green-500 hover:bg-green-600">
-                  In Stock
-                </Badge>
-              </TableCell>
-              <TableCell className="text-right">$49.99</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell className="font-medium">YM005</TableCell>
-              <TableCell>Yoga Mat</TableCell>
-              <TableCell>Sports & Fitness</TableCell>
-              <TableCell className="text-center">6</TableCell>
-              <TableCell className="text-center">10</TableCell>
-              <TableCell className="text-center">
-                <Badge variant="destructive">Low Stock</Badge>
-              </TableCell>
-              <TableCell className="text-right">$29.99</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell className="font-medium">SW006</TableCell>
-              <TableCell>Smart Watch</TableCell>
-              <TableCell>Electronics</TableCell>
-              <TableCell className="text-center">2</TableCell>
-              <TableCell className="text-center">8</TableCell>
-              <TableCell className="text-center">
-                <Badge variant="destructive">Low Stock</Badge>
-              </TableCell>
-              <TableCell className="text-right">$199.99</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell className="font-medium">OP007</TableCell>
-              <TableCell>Organic Protein Powder</TableCell>
-              <TableCell>Groceries</TableCell>
-              <TableCell className="text-center">3</TableCell>
-              <TableCell className="text-center">6</TableCell>
-              <TableCell className="text-center">
-                <Badge variant="destructive">Low Stock</Badge>
-              </TableCell>
-              <TableCell className="text-right">$39.99</TableCell>
-            </TableRow>
+            {products.map((product) => (
+              <TableRow key={product.id}>
+                <TableCell className="font-medium">{product.sku}</TableCell>
+                <TableCell>{product.name}</TableCell>
+                <TableCell>{product.category}</TableCell>
+                <TableCell className="text-center">{product.inStock}</TableCell>
+                <TableCell className="text-center">{product.reorderPoint}</TableCell>
+                <TableCell className="text-center">
+                  <Badge variant={product.inStock <= product.reorderPoint ? "destructive" : "default"}>
+                    {product.inStock <= product.reorderPoint ? "Low Stock" : "In Stock"}
+                  </Badge>
+                </TableCell>
+                <TableCell className="text-right">${product.unitPrice.toFixed(2)}</TableCell>
+                <TableCell className="text-center">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => handleDeleteProduct(product.id)}
+                  >
+                    <Trash2 className="h-4 w-4 text-red-500" />
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </div>
